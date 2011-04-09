@@ -28,6 +28,27 @@ test("Plugin initialization", function () {
     });
 });
 
+/* Test disabled for now */
+1||test("", function () {
+    $('#t').append('<img id="test-img" src="data/elephant.jpg?'
+           + Math.random() + '" />');
+    
+    $('#test-img').imgAreaSelect({
+        onInit: function (img, selection) {
+            ok(true, 'Check if the plugin is correctly initialized when the ' +
+                    'image finishes loading after .imgAreaSelect() is called');
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+    
+    stop();
+});
+
 test("Elements layout", function () {
     /* Initialization */
     $('#t').append('<img id="test-img" src="data/elephant.jpg" ' +
@@ -449,6 +470,53 @@ test("Positioning", function () {
             }
         });
     };
+});
+
+test("Window resize", function () {
+    /* Initialization */
+    $('#t').append('<div style="display: none;">' +
+            '<img id="test-img" src="data/elephant.jpg" /></div>');
+
+    expect(1);
+    
+    var done = false;
+    
+    var continueTests = function (success, exception) {
+        if (done)
+            return;
+        
+        done = true;
+        
+        if (!success)
+            ok(false, exception);
+        else
+            ok(true, 'Check if no exception is raised when the image is ' +
+                    'hidden and window resize event occurs');
+        
+        /* Cleanup */
+        $('#test-img').imgAreaSelect({ remove: true });
+        $.handlerException(false);
+        testCleanup();
+
+        start();
+    };
+    
+    $.handlerException($(window), 'resize',
+        function (exception) {
+            continueTests(false, exception);
+        },
+        function () {
+            continueTests(true);
+        });
+    
+    stop();
+
+    $('#test-img').imgAreaSelect({
+        onInit: function (img, selection) {
+            $(window).resize();
+            continueTests();
+        }
+    });
 });
 
 test("Plugin removal", function () {

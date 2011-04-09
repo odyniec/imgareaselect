@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 0.9.4
+ * version 0.9.5
  *
  * Copyright (c) 2008-2011 Michal Wojciechowski (odyniec.net)
  *
@@ -70,7 +70,7 @@ $.imgAreaSelect = function (img, options) {
         left, top,
         
         /* Image offset (as returned by .offset()) */
-        imgOfs,
+        imgOfs = { left: 0, top: 0 },
         
         /* Image dimensions (as returned by .width() and .height()) */
         imgWidth, imgHeight,
@@ -82,7 +82,7 @@ $.imgAreaSelect = function (img, options) {
         $parent,
         
         /* Parent element offset (as returned by .offset()) */
-        parOfs,
+        parOfs = { left: 0, top: 0 },
         
         /* Base z-index for plugin elements */
         zIndex = 0,
@@ -898,7 +898,6 @@ $.imgAreaSelect = function (img, options) {
             while (i--)
                 $handles = $handles.add(div());
             
-
             /* Add a class to handles and set the CSS properties */
             $handles.addClass(options.classPrefix + '-handle').css({
                 position: 'absolute',
@@ -1012,7 +1011,10 @@ $.imgAreaSelect = function (img, options) {
      * Remove plugin completely
      */
     this.remove = function () {
-        $img.unbind('mousedown', imgMouseDown);
+        /*
+         * Call setOptions with { disable: true } to unbind the event handlers
+         */
+        setOptions({ disable: true });
         $box.add($outer).remove();
     };
     
@@ -1132,6 +1134,13 @@ $.imgAreaSelect = function (img, options) {
      */
     img.complete || img.readyState == 'complete' || !$img.is('img') ?
         imgLoad() : $img.one('load', imgLoad);
+
+    /* 
+     * MSIE 9.0 doesn't always fire the image load event -- resetting the src
+     * attribute seems to trigger it.
+     */   
+    if ($.browser.msie && $.browser.version >= 9)
+        img.src = img.src;
 };
 
 /**
