@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 0.9.5
+ * version 0.9.6
  *
  * Copyright (c) 2008-2011 Michal Wojciechowski (odyniec.net)
  *
@@ -679,6 +679,7 @@ $.imgAreaSelect = function (img, options) {
      * Start selection
      */
     function startSelection() {
+        $(document).unbind('mousemove', startSelection);
         adjust();
 
         x2 = x1;
@@ -704,7 +705,8 @@ $.imgAreaSelect = function (img, options) {
      * Cancel selection
      */
     function cancelSelection() {
-        $(document).unbind('mousemove', startSelection);
+        $(document).unbind('mousemove', startSelection)
+            .unbind('mouseup', cancelSelection);
         hide($box.add($outer));
         
         setSelection(selX(x1), selY(y1), selX(x1), selY(y1));
@@ -729,8 +731,7 @@ $.imgAreaSelect = function (img, options) {
         startY = y1 = evY(event);
 
         /* Selection will start when the mouse is moved */
-        $(document).one('mousemove', startSelection)
-            .one('mouseup', cancelSelection);
+        $(document).mousemove(startSelection).mouseup(cancelSelection);
 
         return false;
     }

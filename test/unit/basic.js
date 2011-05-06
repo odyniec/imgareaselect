@@ -28,6 +28,58 @@ test("Plugin initialization", function () {
     });
 });
 
+test("Mouse events", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" />');
+    
+    stop();
+    
+    $('#test-img').imgAreaSelect({
+        onInit: function (img, selection) {
+            var imgOfs = $('#test-img').offset();
+            var event = $.Event('mousedown');
+            event.which = 1;
+            event.target = $('#test-img');
+            event.pageX = imgOfs.left + 10;
+            event.pageY = imgOfs.top + 10;
+            
+            $('#test-img').trigger(event);
+            
+            event = $.Event('mousemove');
+            event.which = 1;
+            event.target = $(document);
+            event.pageX = imgOfs.left + 50;
+            event.pageY = imgOfs.top + 25;
+            
+            $(document).trigger(event);
+            $(document).trigger(event);
+            
+            event = $.Event('mouseup');
+            event.which = 1;
+            event.target = $(document);
+            event.pageX = imgOfs.left + 50;
+            event.pageY = imgOfs.top + 25;
+            
+            $(document).trigger(event);
+
+            ok($('.imgareaselect-selection').is(':visible'), 'Check if the ' +
+                    'selection area is visible');
+            
+            deepEqual([ $('.imgareaselect-selection').width(),
+                        $('.imgareaselect-selection').height() ],
+                        [ 40, 15 ],
+                        'Check if the selection area has the correct ' +
+                        'dimensions');
+    
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+    
+            start();
+        }
+    });
+});
+
 /* Test disabled for now */
 1||test("", function () {
     $('#t').append('<img id="test-img" src="data/elephant.jpg?'
