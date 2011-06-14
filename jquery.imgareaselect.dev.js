@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 0.9.6
+ * version 0.9.7
  *
  * Copyright (c) 2008-2011 Michal Wojciechowski (odyniec.net)
  *
@@ -95,12 +95,6 @@ $.imgAreaSelect = function (img, options) {
         
         /* Horizontal and vertical scaling factors */
         scaleX, scaleY,
-        
-        /*
-         * Width of the margin inside the selection area where resize mode is
-         * triggered
-         */
-        resizeMargin = 10,
         
         /* Current resize mode ("nw", "se", etc.) */
         resize,
@@ -280,10 +274,10 @@ $.imgAreaSelect = function (img, options) {
         imgOfs.left += ($img.outerWidth() - imgWidth) >> 1;
 
         /* Set minimum and maximum selection area dimensions */
-        minWidth = options.minWidth || 0;
-        minHeight = options.minHeight || 0;
-        maxWidth = min(options.maxWidth || 1<<24, imgWidth);
-        maxHeight = min(options.maxHeight || 1<<24, imgHeight);
+        minWidth = round(options.minWidth / scaleX) || 0;
+        minHeight = round(options.minHeight / scaleY) || 0;
+        maxWidth = round(min(options.maxWidth || 1<<24, imgWidth) / scaleX);
+        maxHeight = round(min(options.maxHeight || 1<<24, imgHeight) / scaleY);
         
         /*
          * Workaround for jQuery 1.3.2 incorrect offset calculation, originally
@@ -297,7 +291,7 @@ $.imgAreaSelect = function (img, options) {
         }
 
         /* Determine parent element offset */ 
-        parOfs = $.inArray($parent.css('position'), ['absolute', 'relative']) + 1 ?
+        parOfs = /absolute|relative/.test($parent.css('position')) ?
             { left: round($parent.offset().left) - $parent.scrollLeft(),
                 top: round($parent.offset().top) - $parent.scrollTop() } :
             position == 'fixed' ?
@@ -513,7 +507,7 @@ $.imgAreaSelect = function (img, options) {
 
             x1 = viewX(selection[/w/.test(resize) ? 'x2' : 'x1']);
             y1 = viewY(selection[/n/.test(resize) ? 'y2' : 'y1']);
-
+            
             $(document).mousemove(selectingMouseMove)
                 .one('mouseup', docMouseUp);
             $box.unbind('mousemove', areaMouseMove);
@@ -630,8 +624,8 @@ $.imgAreaSelect = function (img, options) {
      * @return false
      */
     function selectingMouseMove(event) {
-        x2 = resize == '' || /w|e/.test(resize) || aspectRatio ? evX(event) : viewX(selection.x2);
-        y2 = resize == '' || /n|s/.test(resize) || aspectRatio ? evY(event) : viewY(selection.y2);
+        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) : viewX(selection.x2);
+        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) : viewY(selection.y2);
 
         doResize();
 
@@ -688,7 +682,7 @@ $.imgAreaSelect = function (img, options) {
 
         resize = '';
 
-        if ($outer.is(':not(:visible)'))
+        if (!$outer.is(':visible'))
             /* Show the plugin elements */
             $box.add($outer).hide().fadeIn(options.fadeSpeed||0);
 
@@ -711,8 +705,11 @@ $.imgAreaSelect = function (img, options) {
         
         setSelection(selX(x1), selY(y1), selX(x1), selY(y1));
         
-        options.onSelectChange(img, getSelection());
-        options.onSelectEnd(img, getSelection());
+        /* If this is an API call, callback functions should not be triggered */
+        if (!this instanceof $.imgAreaSelect) {
+            options.onSelectChange(img, getSelection());
+            options.onSelectEnd(img, getSelection());
+        }
     }
 
     /**
@@ -764,7 +761,7 @@ $.imgAreaSelect = function (img, options) {
         }, options));
 
         $box.add($outer).css({ visibility: '' });
-
+        
         if (options.show) {
             shown = true;
             adjust();
@@ -968,9 +965,9 @@ $.imgAreaSelect = function (img, options) {
         $box.append($area.add($border).add($areaOpera).add($handles));
 
         if ($.browser.msie) {
-            if (o = $outer.css('filter').match(/opacity=([0-9]+)/))
+            if (o = $outer.css('filter').match(/opacity=(\d+)/))
                 $outer.css('opacity', o[1]/100);
-            if (o = $border.css('filter').match(/opacity=([0-9]+)/))
+            if (o = $border.css('filter').match(/opacity=(\d+)/))
                 $border.css('opacity', o[1]/100);
         }
         
@@ -1066,6 +1063,11 @@ $.imgAreaSelect = function (img, options) {
     this.setSelection = setSelection;
     
     /**
+     * Cancel selection
+     */
+    this.cancelSelection = cancelSelection;
+    
+    /**
      * Update plugin elements
      * 
      * @param resetKeyPress
@@ -1138,9 +1140,10 @@ $.imgAreaSelect = function (img, options) {
 
     /* 
      * MSIE 9.0 doesn't always fire the image load event -- resetting the src
-     * attribute seems to trigger it.
+     * attribute seems to trigger it. The check is for version 7 and above to
+     * accommodate for MSIE 9 running in compatibility mode.
      */   
-    if ($.browser.msie && $.browser.version >= 9)
+   if ($.browser.msie && $.browser.version >= 7)
         img.src = img.src;
 };
 

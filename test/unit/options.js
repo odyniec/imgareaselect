@@ -5,7 +5,7 @@ module("Options");
 test("classPrefix", function () {
     /* Initialization */
     $('#t').append('<img id="test-img" src="data/elephant.jpg" />');
-    
+
     stop();
     
     $('#test-img').imgAreaSelect({
@@ -19,7 +19,7 @@ test("classPrefix", function () {
             $('#test-img').imgAreaSelect({ handles: true });
 
             ok($('.test-handle').length == 8,
-                    'Check if added handle elements have the class ' + 
+                    'Check if the added handle elements have the class ' + 
                     '"test-handle"');
             
             /* Cleanup */
@@ -63,6 +63,152 @@ test("handles", function () {
             ok($('.imgareaselect-handle').length == 0,
                 'Check if no handles are present with "handles: false"');
                     
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+});
+
+test("minWidth/minHeight", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" />');
+    
+    stop();
+    
+    $('#test-img').imgAreaSelect({ minWidth: 50, minHeight: 50,
+        onInit: function (img, selection) {
+            var x = $(img).offset().left - $(document).scrollLeft(),
+                y = $(img).offset().top - $(document).scrollTop();
+            
+            /* Simulate selecting a 10x10 pixels area */
+            $(img).simulate("mousedown", { clientX: x + 10, clientY: y + 10 });
+            $(img).simulate("mousemove", { clientX: x + 20, clientY: y + 20 });
+            $(img).simulate("mousemove", { clientX: x + 20, clientY: y + 20 });
+            $(img).simulate("mouseup", { clientX: x + 20, clientY: y + 20 });
+            
+            var selection = $(img).imgAreaSelect({ instance: true })
+                .getSelection();
+            
+            same([ selection.width, selection.height ], [ 50, 50 ], "Check " +
+                    "if the selected area has the specified minimum " +
+                    "dimensions");
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+});
+
+test("maxWidth/maxHeight", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" />');
+    
+    stop();
+
+    $('#test-img').imgAreaSelect({ maxWidth: 100, maxHeight: 100,
+        onInit: function (img, selection) {
+            var x = $(img).offset().left - $(document).scrollLeft(),
+                y = $(img).offset().top - $(document).scrollTop();
+
+            /* Simulate selecting a 140x140 pixels area */
+            $(img).simulate("mousedown", { clientX: x + 10, clientY: y + 10 });
+            $(img).simulate("mousemove", { clientX: x + 150, clientY: y + 150 });
+            $(img).simulate("mousemove", { clientX: x + 150, clientY: y + 150 });
+            $(img).simulate("mouseup", { clientX: x + 150, clientY: y + 150 });
+
+            var selection = $(img).imgAreaSelect({ instance: true })
+                .getSelection();
+            
+            same([ selection.width, selection.height ], [ 100, 100 ], "Check " +
+                    "if the selected area has the specified maximum " +
+                    "dimensions");
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+});
+
+test("minWidth/minHeight with scaling", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" ' +
+            'style="width: 640px; height: 400px;" />');
+    
+    stop();
+    
+    $('#test-img').imgAreaSelect({ minWidth: 50, minHeight: 50,
+        imageWidth: 320, imageHeight: 200,
+        onInit: function (img, selection) {
+            var x = $(img).offset().left - $(document).scrollLeft(),
+                y = $(img).offset().top - $(document).scrollTop();
+            
+            /* Simulate selecting a 10x10 pixels area */
+            $(img).simulate("mousedown", { clientX: x + 10, clientY: y + 10 });
+            $(img).simulate("mousemove", { clientX: x + 20, clientY: y + 20 });
+            $(img).simulate("mousemove", { clientX: x + 20, clientY: y + 20 });
+            $(img).simulate("mouseup", { clientX: x + 20, clientY: y + 20 });
+            
+            var selection = $(img).imgAreaSelect({ instance: true })
+                .getSelection();
+            
+            same([ selection.width, selection.height ], [ 50, 50 ], "Check " +
+                    "if the selected area has the specified minimum " +
+                    "dimensions");
+            
+            same([ $('.imgareaselect-selection').width(), 
+                     $('.imgareaselect-selection').height() ], [ 100, 100 ],
+                    "Check if the selection area div element has the correct " +
+                    "dimensions");
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+});
+
+test("maxWidth/maxHeight with scaling", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" ' +
+            'style="width: 160px; height: 100px;" />');
+    
+    stop();
+    
+    $('#test-img').imgAreaSelect({ maxWidth: 100, maxHeight: 100,
+        imageWidth: 320, imageHeight: 200,
+        onInit: function (img, selection) {
+            var x = $(img).offset().left - $(document).scrollLeft(),
+                y = $(img).offset().top - $(document).scrollTop();
+            
+            /* Simulate selecting a 80x80 pixels area */
+            $(img).simulate("mousedown", { clientX: x + 10, clientY: y + 10 });
+            $(img).simulate("mousemove", { clientX: x + 90, clientY: y + 90 });
+            $(img).simulate("mousemove", { clientX: x + 90, clientY: y + 90 });
+            $(img).simulate("mouseup", { clientX: x + 90, clientY: y + 90 });
+            
+            var selection = $(img).imgAreaSelect({ instance: true })
+                .getSelection();
+            
+            same([ selection.width, selection.height ], [ 100, 100 ], "Check " +
+                    "if the selected area has the specified maximum " +
+                    "dimensions");
+            
+            same([ $('.imgareaselect-selection').width(), 
+                     $('.imgareaselect-selection').height() ], [ 50, 50 ],
+                    "Check if the selection area div element has the correct " +
+                    "dimensions");
+            
             /* Cleanup */
             $('#test-img').imgAreaSelect({ remove: true });
             testCleanup();

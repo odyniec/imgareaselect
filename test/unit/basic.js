@@ -80,27 +80,6 @@ test("Mouse events", function () {
     });
 });
 
-/* Test disabled for now */
-1||test("", function () {
-    $('#t').append('<img id="test-img" src="data/elephant.jpg?'
-           + Math.random() + '" />');
-    
-    $('#test-img').imgAreaSelect({
-        onInit: function (img, selection) {
-            ok(true, 'Check if the plugin is correctly initialized when the ' +
-                    'image finishes loading after .imgAreaSelect() is called');
-            
-            /* Cleanup */
-            $('#test-img').imgAreaSelect({ remove: true });
-            testCleanup();
-            
-            start();
-        }
-    });
-    
-    stop();
-});
-
 test("Elements layout", function () {
     /* Initialization */
     $('#t').append('<img id="test-img" src="data/elephant.jpg" ' +
@@ -248,6 +227,10 @@ test("Elements layout with a bordered image", function () {
 });
 
 test("Positioning", function () {
+    /* 
+     * MSIE 6.0 does not support "position: fixed", so we won't be running the
+     * two checks to test for that.
+     */
     if ($.browser.msie && $.browser.version < 7)
         expect(7);
     else

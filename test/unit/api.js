@@ -73,4 +73,41 @@ test("setSelection()/getSelection() with scaling", function () {
     });
 });
 
+test("cancelSelection", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" \
+        style="width: 160px; height: 100px;" />');
+
+    stop();
+
+    var selectEndCalled = false;
+    
+    function selectEnd(img, selection) {
+        selectEndCalled = true;
+    }
+    
+    var ias = $('#test-img').imgAreaSelect({
+        show: true,
+        x1: 20, y1: 20, x2: 50, y2: 50,
+        onSelectEnd: selectEnd,
+        onInit: function (img, selection) {
+            ias.cancelSelection();
+            
+            ok(!$('.imgareaselect-selection').is(':visible'),
+                    'cancelSelection: Check if the selection is no longer ' +
+                    'visible after a call to cancelSelection()');
+            
+            equals(selectEndCalled, false, 'cancelSelection: Check if the ' +
+                    'onSelectEnd callback function is not triggered');
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+
+            start();
+        },
+        instance: true
+    });
+});
+
 })();
