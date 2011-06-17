@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 0.9.7
+ * version 0.9.8
  *
  * Copyright (c) 2008-2011 Michal Wojciechowski (odyniec.net)
  *
@@ -276,8 +276,8 @@ $.imgAreaSelect = function (img, options) {
         /* Set minimum and maximum selection area dimensions */
         minWidth = round(options.minWidth / scaleX) || 0;
         minHeight = round(options.minHeight / scaleY) || 0;
-        maxWidth = round(min(options.maxWidth || 1<<24, imgWidth) / scaleX);
-        maxHeight = round(min(options.maxHeight || 1<<24, imgHeight) / scaleY);
+        maxWidth = round(min(options.maxWidth / scaleX || 1<<24, imgWidth));
+        maxHeight = round(min(options.maxHeight / scaleY || 1<<24, imgHeight));
         
         /*
          * Workaround for jQuery 1.3.2 incorrect offset calculation, originally

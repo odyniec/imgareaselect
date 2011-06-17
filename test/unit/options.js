@@ -72,6 +72,63 @@ test("handles", function () {
     });
 });
 
+test("imageWidth/imageHeight", function () {
+    /* Initialization */
+    $('#t').append('<img id="test-img" src="data/elephant.jpg" ' +
+            'style="width: 160px; height: 100px;" />');
+    
+    stop();
+    
+    $('#test-img').imgAreaSelect({ imageWidth: 320, imageHeight: 200,
+        onInit: function (img, selection) {
+            var x = $(img).offset().left - $(document).scrollLeft(),
+                y = $(img).offset().top - $(document).scrollTop();
+            
+            /* Simulate selecting a 30x30 pixels area */
+            $(img).simulate("mousedown", { clientX: x + 10, clientY: y + 10 });
+            $(img).simulate("mousemove", { clientX: x + 40, clientY: y + 40 });
+            $(img).simulate("mousemove", { clientX: x + 40, clientY: y + 40 });
+            $(img).simulate("mouseup", { clientX: x + 40, clientY: y + 40 });
+            
+            var selection = $(img).imgAreaSelect({ instance: true })
+                .getSelection();
+            
+            same([ selection.width, selection.height ], [ 60, 60 ], "Check " +
+                    "if the selected area has the correct dimensions");
+            
+            same([ $('.imgareaselect-selection').width(), 
+                     $('.imgareaselect-selection').height() ], [ 30, 30 ],
+                    "Check if the selection area div element has the correct " +
+                    "dimensions");
+            
+            $(img).imgAreaSelect({ instance: true }).cancelSelection();
+            
+            /* Simulate selecting the whole image */
+            $(img).simulate("mousemove", { clientX: x, clientY: y });
+            $(img).simulate("mousedown", { clientX: x, clientY: y });
+            $(img).simulate("mousemove", { clientX: x + 160, clientY: y + 100 });
+            $(img).simulate("mousemove", { clientX: x + 160, clientY: y + 100 });
+            $(img).simulate("mouseup", { clientX: x + 160, clientY: y + 100 });
+            
+            selection = $(img).imgAreaSelect({ instance: true }).getSelection();
+            
+            same([ selection.width, selection.height ], [ 320, 200 ], "Check " +
+                    "if the selected area has the correct dimensions");
+            
+            same([ $('.imgareaselect-selection').width(), 
+                     $('.imgareaselect-selection').height() ], [ 160, 100 ],
+                    "Check if the selection area div element has the correct " +
+                    "dimensions");
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+            
+            start();
+        }
+    });
+});
+
 test("minWidth/minHeight", function () {
     /* Initialization */
     $('#t').append('<img id="test-img" src="data/elephant.jpg" />');
