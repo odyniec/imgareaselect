@@ -93,10 +93,10 @@ test("imageWidth/imageHeight", function () {
             var selection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same([ selection.width, selection.height ], [ 60, 60 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 60, 60 ], "Check " +
                     "if the selected area has the correct dimensions");
             
-            same([ $('.imgareaselect-selection').width(), 
+            deepEqual([ $('.imgareaselect-selection').width(), 
                      $('.imgareaselect-selection').height() ], [ 30, 30 ],
                     "Check if the selection area div element has the correct " +
                     "dimensions");
@@ -112,10 +112,10 @@ test("imageWidth/imageHeight", function () {
             
             selection = $(img).imgAreaSelect({ instance: true }).getSelection();
             
-            same([ selection.width, selection.height ], [ 320, 200 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 320, 200 ], "Check " +
                     "if the selected area has the correct dimensions");
             
-            same([ $('.imgareaselect-selection').width(), 
+            deepEqual([ $('.imgareaselect-selection').width(), 
                      $('.imgareaselect-selection').height() ], [ 160, 100 ],
                     "Check if the selection area div element has the correct " +
                     "dimensions");
@@ -149,7 +149,7 @@ test("minWidth/minHeight", function () {
             var selection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same([ selection.width, selection.height ], [ 50, 50 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 50, 50 ], "Check " +
                     "if the selected area has the specified minimum " +
                     "dimensions");
             
@@ -182,7 +182,7 @@ test("maxWidth/maxHeight", function () {
             var selection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same([ selection.width, selection.height ], [ 100, 100 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 100, 100 ], "Check " +
                     "if the selected area has the specified maximum " +
                     "dimensions");
             
@@ -217,11 +217,11 @@ test("minWidth/minHeight with scaling", function () {
             var selection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same([ selection.width, selection.height ], [ 50, 50 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 50, 50 ], "Check " +
                     "if the selected area has the specified minimum " +
                     "dimensions");
             
-            same([ $('.imgareaselect-selection').width(), 
+            deepEqual([ $('.imgareaselect-selection').width(), 
                      $('.imgareaselect-selection').height() ], [ 100, 100 ],
                     "Check if the selection area div element has the correct " +
                     "dimensions");
@@ -257,11 +257,11 @@ test("maxWidth/maxHeight with scaling", function () {
             var selection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same([ selection.width, selection.height ], [ 100, 100 ], "Check " +
+            deepEqual([ selection.width, selection.height ], [ 100, 100 ], "Check " +
                     "if the selected area has the specified maximum " +
                     "dimensions");
             
-            same([ $('.imgareaselect-selection').width(), 
+            deepEqual([ $('.imgareaselect-selection').width(), 
                      $('.imgareaselect-selection').height() ], [ 50, 50 ],
                     "Check if the selection area div element has the correct " +
                     "dimensions");
@@ -310,7 +310,7 @@ test("movable", function () {
             var newSelection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
+            deepEqual(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
                 width: 100, height: 100 },
                 'Check if the returned selection is correct after move');
 
@@ -329,7 +329,7 @@ test("movable", function () {
                 var newSelection = $(img).imgAreaSelect({ instance: true })
                     .getSelection();
                 
-                same(newSelection, { x1: 50, y1: 50, x2: 150, y2: 150,
+                deepEqual(newSelection, { x1: 50, y1: 50, x2: 150, y2: 150,
                     width: 100, height: 100 },
                     'Check if the returned selection is correct when ' +
                     'movable is set to false');
@@ -355,7 +355,7 @@ test("parent", function () {
         parent: '#test-div',
         x1: 10, y1: 10, x2: 20, y2: 20,
         onInit: function (img, selection) {
-            equals($('.imgareaselect-selection').parent().parent().attr('id'),
+            equal($('.imgareaselect-selection').parent().parent().attr('id'),
                 'test-div', 'Check if the parent element is set correctly');
             
             /* Cleanup */
@@ -444,7 +444,7 @@ test("resizable", function () {
             var newSelection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            same(newSelection, { x1: 25, y1: 25, x2: 150, y2: 150,
+            deepEqual(newSelection, { x1: 25, y1: 25, x2: 150, y2: 150,
                 width: 125, height: 125 },
                 'Check if the returned selection is correct after resize');
 
@@ -463,7 +463,7 @@ test("resizable", function () {
                 var newSelection = $(img).imgAreaSelect({ instance: true })
                     .getSelection();
                 
-                same(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
+                deepEqual(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
                     width: 100, height: 100 },
                     'Check if the returned selection is correct when ' +
                     'resizable is set to false');
@@ -551,7 +551,7 @@ test("zIndex", function () {
     $('#test-img').imgAreaSelect({
         zIndex: 100,
         onInit: function (img, selection) {
-            equals($('.imgareaselect-selection').parent().css('z-index'), 102,
+            equal($('.imgareaselect-selection').parent().css('z-index'), 102,
                 'Check if the z-index value is correct');
 
             /* Cleanup */

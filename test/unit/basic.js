@@ -143,7 +143,7 @@ test("Elements layout", function () {
                 'Check if the top handle div is positioned correctly');
 
             /* Z-index */
-            equals($('.imgareaselect-selection').parent().css('z-index'), 27,
+            equal($('.imgareaselect-selection').parent().css('z-index'), 27,
                 'Check if the automatically calculated z-index value is correct');
 
             /* Cleanup */
@@ -294,7 +294,7 @@ test("Positioning", function () {
             var imgOfs = $('#test-img-static').offset();
             var selOfs = $('.ias-selection').offset();
 
-            equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+            equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                 Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                 'Check if the selection area offset is correct for an ' +
                 'image on a statically positioned div element');
@@ -315,7 +315,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-static-parent').offset();
                 var selOfs = $('.ias-selection').offset();
  
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on a statically positioned div element, ' +
@@ -338,7 +338,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-relative').offset();
                 var selOfs = $('.ias-selection').offset();
      
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on a relatively positioned div element');
@@ -360,7 +360,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-relative-parent').offset();
                 var selOfs = $('.ias-selection').offset();
      
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on a relatively positioned div element, ' +
@@ -383,7 +383,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-absolute').offset();
                 var selOfs = $('.ias-selection').offset();
      
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on an absolutely positioned div element');
@@ -406,7 +406,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-absolute-parent').offset();
                 var selOfs = $('.ias-selection').offset();
  
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on an absolutely positioned div element, ' +
@@ -435,7 +435,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-fixed').offset();
                 var selOfs = $('.ias-selection').offset();
  
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on a fixedly positioned div element');
@@ -461,7 +461,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-fixed-parent').offset();
                 var selOfs = $('.ias-selection').offset();
      
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on a fixedly positioned div element, ' +
@@ -490,7 +490,7 @@ test("Positioning", function () {
                 var imgOfs = $('#test-img-scrolled-parent').offset();
                 var selOfs = $('.ias-selection').offset();
      
-                equals(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
+                equal(Math.round(selOfs.left) + ';' + Math.round(selOfs.top),
                     Math.round(imgOfs.left + 10) + ';' + Math.round(imgOfs.top + 20),
                     'Check if the selection area offset is correct for an ' +
                     'image on an absolutely positioned scrolled div element, ' +
@@ -514,42 +514,30 @@ test("Window resize", function () {
 
     expect(1);
     
-    var done = false;
-    
-    var continueTests = function (success, exception) {
-        if (done)
-            return;
-        
-        done = true;
-        
-        if (!success)
-            ok(false, exception);
-        else
-            ok(true, 'Check if no exception is raised when the image is ' +
-                    'hidden and window resize event occurs');
-        
-        /* Cleanup */
-        $('#test-img').imgAreaSelect({ remove: true });
-        $.handlerException(false);
-        testCleanup();
-
-        start();
-    };
-    
-    $.handlerException($(window), 'resize',
-        function (exception) {
-            continueTests(false, exception);
-        },
-        function () {
-            continueTests(true);
-        });
-    
     stop();
-
+    
     $('#test-img').imgAreaSelect({
         onInit: function (img, selection) {
-            $(window).resize();
-            continueTests();
+            var exception;
+            
+            try {
+                $(window).resize();
+            }
+            catch (e) {
+                exception = e;
+            }
+
+            if (exception)
+                ok(false, exception);
+            else
+                ok(true, 'Check if no exception is raised when the image is ' +
+                        'hidden and window resize event occurs');
+            
+            /* Cleanup */
+            $('#test-img').imgAreaSelect({ remove: true });
+            testCleanup();
+
+            start();
         }
     });
 });

@@ -15,14 +15,14 @@ test("setSelection()/getSelection()", function () {
             ias.update();
             var selection = ias.getSelection();
 
-            same(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
+            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
                 width: 20, height: 20 },
                 'Check if the returned selection is correct');
 
-            equals($('.imgareaselect-selection').width(), 20,
+            equal($('.imgareaselect-selection').width(), 20,
                 'Check if the selection area div element has the proper width');
             
-            equals($('.imgareaselect-selection').height(), 20,
+            equal($('.imgareaselect-selection').height(), 20,
                 'Check if the selection area div element has the proper ' +
                 'height');
 
@@ -52,14 +52,14 @@ test("setSelection()/getSelection() with scaling", function () {
             ias.update();
             var selection = ias.getSelection();
             
-            same(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
+            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
                 width: 20, height: 20 },
                 'Check if the returned selection is correct');
 
-            equals($('.imgareaselect-selection').width(), 10,
+            equal($('.imgareaselect-selection').width(), 10,
                 'Check if the selection area div element has the proper width');
         
-            equals($('.imgareaselect-selection').height(), 10,
+            equal($('.imgareaselect-selection').height(), 10,
                 'Check if the selection area div element has the proper ' +
                 'height');
 
@@ -97,7 +97,7 @@ test("cancelSelection", function () {
                     'cancelSelection: Check if the selection is no longer ' +
                     'visible after a call to cancelSelection()');
             
-            equals(selectEndCalled, false, 'cancelSelection: Check if the ' +
+            equal(selectEndCalled, false, 'cancelSelection: Check if the ' +
                     'onSelectEnd callback function is not triggered');
             
             /* Cleanup */
