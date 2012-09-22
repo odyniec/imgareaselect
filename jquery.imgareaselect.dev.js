@@ -2,7 +2,7 @@
  * imgAreaSelect jQuery plugin
  * version 0.9.9
  *
- * Copyright (c) 2008-2011 Michal Wojciechowski (odyniec.net)
+ * Copyright (c) 2008-2012 Michal Wojciechowski (odyniec.net)
  *
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
@@ -965,9 +965,9 @@ $.imgAreaSelect = function (img, options) {
         $box.append($area.add($border).add($areaOpera).add($handles));
 
         if ($.browser.msie) {
-            if (o = $outer.css('filter').match(/opacity=(\d+)/))
+            if (o = ($outer.css('filter')||'').match(/opacity=(\d+)/))
                 $outer.css('opacity', o[1]/100);
-            if (o = $border.css('filter').match(/opacity=(\d+)/))
+            if (o = ($border.css('filter')||'').match(/opacity=(\d+)/))
                 $border.css('opacity', o[1]/100);
         }
         
