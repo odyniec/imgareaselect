@@ -390,23 +390,6 @@ $.imgAreaSelect = function (img, options) {
                 $(document)[$.imgAreaSelect.keyPress](
                     $.imgAreaSelect.onKeyPress = docKeyPress);
         }
-
-        /*
-         * Internet Explorer displays 1px-wide dashed borders incorrectly by
-         * filling the spaces between dashes with white. Toggling the margin
-         * property between 0 and "auto" fixes this in IE6 and IE7 (IE8 is still
-         * broken). This workaround is not perfect, as it requires setTimeout()
-         * and thus causes the border to flicker a bit, but I haven't found a
-         * better solution.
-         * 
-         * Note: This only happens with CSS borders, set with the borderWidth,
-         * borderOpacity, borderColor1, and borderColor2 options (which are now
-         * deprecated). Borders created with GIF background images are fine.
-         */ 
-        if ($.browser.msie && $border.outerWidth() - $border.innerWidth() == 2) {
-            $border.css('margin', 0);
-            setTimeout(function () { $border.css('margin', 'auto'); }, 0);
-        }
     }
     
     /**
@@ -874,21 +857,6 @@ $.imgAreaSelect = function (img, options) {
     };
 
     /**
-     * Apply style options to plugin element (or multiple elements)
-     * 
-     * @param $elem
-     *            A jQuery object representing the element(s) to style
-     * @param props
-     *            An object that maps option names to corresponding CSS
-     *            properties
-     */
-    function styleOptions($elem, props) {
-        for (var option in props)
-            if (options[option] !== undefined)
-                $elem.css(props[option], options[option]);
-    }
-
-    /**
      * Set plugin options
      * 
      * @param newOptions
@@ -930,18 +898,6 @@ $.imgAreaSelect = function (img, options) {
              */
             if (!parseInt($handles.css('width')) >= 0)
                 $handles.width(5).height(5);
-            
-            /*
-             * If the borderWidth option is in use, add a solid border to
-             * handles
-             */
-            if (o = options.borderWidth)
-                $handles.css({ borderWidth: o, borderStyle: 'solid' });
-
-            /* Apply other style options */
-            styleOptions($handles, { borderColor1: 'border-color',
-                borderColor2: 'background-color',
-                borderOpacity: 'opacity' });
         }
 
         /* Calculate scale factors */
@@ -965,18 +921,6 @@ $.imgAreaSelect = function (img, options) {
         $area.addClass(options.classPrefix + '-selection');
         for (i = 0; i++ < 4;)
             $($border[i-1]).addClass(options.classPrefix + '-border' + i);
-
-        /* Apply style options */
-        styleOptions($area, { selectionColor: 'background-color',
-            selectionOpacity: 'opacity' });
-        styleOptions($border, { borderOpacity: 'opacity',
-            borderWidth: 'border-width' });
-        styleOptions($outer, { outerColor: 'background-color',
-            outerOpacity: 'opacity' });
-        if (o = options.borderColor1)
-            $($border[0]).css({ borderStyle: 'solid', borderColor: o });
-        if (o = options.borderColor2)
-            $($border[1]).css({ borderStyle: 'dashed', borderColor: o });
 
         /* Append all the selection area elements to the container box */
         $box.append($area.add($border).add($handles));
