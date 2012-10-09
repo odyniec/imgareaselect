@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 0.9.9-mobile
+ * version 1.0
  *
  * Copyright (c) 2008-2012 Michal Wojciechowski (odyniec.net)
  *
@@ -59,12 +59,6 @@ $.imgAreaSelect = function (img, options) {
         $outer = div().add(div()).add(div()).add(div()),
         /* Handles (empty by default, initialized in setOptions()) */
         $handles = $([]),
-        
-        /*
-         * Additional element to work around a cursor problem in Opera
-         * (explained later)
-         */
-        $areaOpera,
         
         /* Image position (relative to viewport) */
         left, top,
@@ -479,8 +473,6 @@ $.imgAreaSelect = function (img, options) {
 
         $box.css('cursor', resize ? resize + '-resize' :
             options.movable ? 'move' : '');
-        if ($areaOpera)
-            $areaOpera.toggle();
     }
 
     /**
@@ -987,7 +979,7 @@ $.imgAreaSelect = function (img, options) {
             $($border[1]).css({ borderStyle: 'dashed', borderColor: o });
 
         /* Append all the selection area elements to the container box */
-        $box.append($area.add($border).add($areaOpera).add($handles));
+        $box.append($area.add($border).add($handles));
 
         if ($.browser.msie) {
             if (o = ($outer.css('filter')||'').match(/opacity=(\d+)/))
@@ -1133,17 +1125,6 @@ $.imgAreaSelect = function (img, options) {
      */
     $.imgAreaSelect.keyPress = $.browser.msie ||
         $.browser.safari ? 'keydown' : 'keypress';
-
-    /*
-     * There is a bug affecting the CSS cursor property in Opera (observed in
-     * versions up to 10.00) that prevents the cursor from being updated unless
-     * the mouse leaves and enters the element again. To trigger the mouseover
-     * event, we're adding an additional div to $box and we're going to toggle
-     * it when mouse moves inside the selection area.
-     */
-    if ($.browser.opera)
-        $areaOpera = div().css({ width: '100%', height: '100%',
-            position: 'absolute', zIndex: zIndex + 2 || 2 });
 
     /*
      * We initially set visibility to "hidden" as a workaround for a weird
