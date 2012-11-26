@@ -368,7 +368,7 @@ $.imgAreaSelect = function (img, options) {
              * Need to reset the document keypress event handler -- unbind the
              * current handler
              */
-            if ($.imgAreaSelect.keyPress != docKeyPress)
+            if ($.imgAreaSelect.onKeyPress != docKeyPress)
                 $(document).unbind($.imgAreaSelect.keyPress,
                     $.imgAreaSelect.onKeyPress);
 
