@@ -10,10 +10,10 @@ test("Document keypress event binding", function () {
 
     var keyPressed = false;
 
-    $(document).bind($.imgAreaSelect.keyPress, function () {
+    $(document).bind('keydown keypress', function () {
         keyPressed = true;
     });
-        
+
     $('#test-img').imgAreaSelect({
         onInit: function (img, selection) {
             $(document).keydown();
