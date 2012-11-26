@@ -253,11 +253,11 @@ $.imgAreaSelect = function (img, options) {
      */
     function adjust() {
         /*
-         * Do not adjust if image width is not a positive number. This might
-         * happen when imgAreaSelect is put on a parent element which is then
-         * hidden.
+         * Do not adjust if image has not yet loaded or if width is not a
+         * positive number. The latter might happen when imgAreaSelect is put
+         * on a parent element which is then hidden.
          */
-        if (!$img.width())
+        if (!imgLoaded || !$img.width())
             return;
         
         /*
