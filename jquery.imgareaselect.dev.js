@@ -2,7 +2,7 @@
  * imgAreaSelect jQuery plugin
  * version 1.0
  *
- * Copyright (c) 2008-2012 Michal Wojciechowski (odyniec.net)
+ * Copyright (c) 2008-2013 Michal Wojciechowski (odyniec.net)
  *
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
@@ -110,6 +110,9 @@ $.imgAreaSelect = function (img, options) {
         
         /* Document element */
         docElem = document.documentElement,
+
+        /* User agent */
+        ua = navigator.userAgent,
         
         /* Various helper variables used throughout the code */ 
         $p, d, i, o, w, h, adjusted;
@@ -923,9 +926,9 @@ $.imgAreaSelect = function (img, options) {
             $($border[i-1]).addClass(options.classPrefix + '-border' + i);
 
         /* Append all the selection area elements to the container box */
-        $box.append($area.add($border).add($handles));
+        $box.append($area.add($border).add($areaOpera)).append($handles);
 
-        if ($.browser.msie) {
+        if (msie) {
             if (o = ($outer.css('filter')||'').match(/opacity=(\d+)/))
                 $outer.css('opacity', o[1]/100);
             if (o = ($border.css('filter')||'').match(/opacity=(\d+)/))
@@ -1039,6 +1042,11 @@ $.imgAreaSelect = function (img, options) {
      */
     this.update = doUpdate;
 
+    /* Do the dreaded browser detection */
+    var msie = (/msie ([\w.]+)/i.exec(ua)||[])[1],
+        opera = /opera/i.test(ua),
+        safari = /webkit/i.test(ua) && !/chrome/i.test(ua);
+
     /* 
      * Traverse the image's parent elements (up to <body>) and find the
      * highest z-index
@@ -1061,14 +1069,13 @@ $.imgAreaSelect = function (img, options) {
      */
     zIndex = options.zIndex || zIndex;
 
-    if ($.browser.msie)
+    if (msie)
         $img.attr('unselectable', 'on');
 
     /*
      * In MSIE and WebKit, we need to use the keydown event instead of keypress
      */
-    $.imgAreaSelect.keyPress = $.browser.msie ||
-        $.browser.safari ? 'keydown' : 'keypress';
+    $.imgAreaSelect.keyPress = msie || safari ? 'keydown' : 'keypress';
 
     /*
      * We initially set visibility to "hidden" as a workaround for a weird
@@ -1094,8 +1101,8 @@ $.imgAreaSelect = function (img, options) {
      * MSIE 9.0 doesn't always fire the image load event -- resetting the src
      * attribute seems to trigger it. The check is for version 7 and above to
      * accommodate for MSIE 9 running in compatibility mode.
-     */   
-   if (!imgLoaded && $.browser.msie && $.browser.version >= 7)
+     */
+    if (!imgLoaded && msie && msie >= 7)
         img.src = img.src;
 };
 
