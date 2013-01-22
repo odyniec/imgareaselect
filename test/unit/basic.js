@@ -231,7 +231,9 @@ test("Positioning", function () {
      * MSIE 6.0 does not support "position: fixed", so we won't be running the
      * two checks to test for that.
      */
-    if ($.browser.msie && $.browser.version < 7)
+    var msie = (/msie ([\w.]+)/i.exec(navigator.userAgent)||[])[1];
+
+    if (msie && msie < 7)
         expect(7);
     else
         expect(9);
@@ -415,7 +417,7 @@ test("Positioning", function () {
                 /* Cleanup */
                 $('#test-img-absolute-parent').imgAreaSelect({ remove: true });
 
-                if ($.browser.msie && $.browser.version < 7)
+                if (msie && msie < 7)
                     testImgScrolledParent();
                 else
                     testImgFixed();
