@@ -1044,7 +1044,6 @@ $.imgAreaSelect = function (img, options) {
 
     /* Do the dreaded browser detection */
     var msie = (/msie ([\w.]+)/i.exec(ua)||[])[1],
-        opera = /opera/i.test(ua),
         safari = /webkit/i.test(ua) && !/chrome/i.test(ua);
 
     /* 
