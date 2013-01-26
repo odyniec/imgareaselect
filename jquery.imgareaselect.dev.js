@@ -926,7 +926,7 @@ $.imgAreaSelect = function (img, options) {
             $($border[i-1]).addClass(options.classPrefix + '-border' + i);
 
         /* Append all the selection area elements to the container box */
-        $box.append($area.add($border).add($areaOpera)).append($handles);
+        $box.append($area.add($border)).append($handles);
 
         if (msie) {
             if (o = ($outer.css('filter')||'').match(/opacity=(\d+)/))
