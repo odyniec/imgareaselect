@@ -1,7 +1,7 @@
 {
     "name": "imgareaselect",
     "title": "ImgAreaSelect - image selection/cropping plugin",
-    "version": "1.0",
+    "version": "0.9.10",
     "description": "ImgAreaSelect is a plugin for selecting a rectangular area of an image. It allows web developers to easily implement image cropping functionality, as well as other user interface features (such as photo notes).",
     "keywords": [ "image", "area", "select", "crop", "cropper" ],
     "author": {
@@ -20,6 +20,6 @@
 		}
     ],
     "dependencies": {
-        "jquery": ">=1.7"
+        "jquery": ">=1.4"
     }
 }
