@@ -867,7 +867,7 @@ $.imgAreaSelect = function (img, options) {
      */
     function setOptions(newOptions) {
         if (newOptions.parent)
-            ($parent = $(newOptions.parent)).append($box.add($outer));
+            ($parent = $(newOptions.parent)).append($box).append($outer);
         
         /* Merge the new options with the existing ones */
         $.extend(options, newOptions);
