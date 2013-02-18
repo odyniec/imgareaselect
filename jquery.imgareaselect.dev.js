@@ -4,8 +4,8 @@
  *
  * Copyright (c) 2008-2013 Michal Wojciechowski (odyniec.net)
  *
- * Dual licensed under the MIT (MIT-LICENSE.txt)
- * and GPL (GPL-LICENSE.txt) licenses.
+ * Dual licensed under the MIT (http://opensource.org/licenses/MIT)
+ * and GPL (http://opensource.org/licenses/GPL-2.0) licenses.
  *
  * http://odyniec.net/projects/imgareaselect/
  *
