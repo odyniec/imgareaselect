@@ -2,12 +2,14 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('imgareaselect.jquery.json'),
         uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> <%= pkg.version %> */ '
-            },
-            dist: {
-                src: 'jquery.<%= pkg.name %>.dev.js',
-                dest: 'dist/jquery.<%= pkg.name %>-<%= pkg.version %>/scripts/jquery.<%= pkg.name %>.min.js'
+            min: {
+                options: {
+                    banner: '/*! <%= pkg.name %> <%= pkg.version %> */ '
+                },
+                files: {
+                    'jquery.<%= pkg.name %>.min.js':
+                        [ 'jquery.<%= pkg.name %>.js' ]
+                }
             }
         },
         copy: {
@@ -16,7 +18,11 @@ module.exports = function(grunt) {
                     {
                         expand: true, cwd: 'distfiles/', src: [ '**' ],
                         dest: 'dist/jquery.<%= pkg.name %>-<%= pkg.version %>/'
-                    }
+                    },
+                    {
+                        src: [ 'jquery.<%= pkg.name %>*.js' ],
+                        dest: 'dist/jquery.<%= pkg.name %>-<%= pkg.version %>/scripts/'
+                    }                
                 ]
             }
         },
