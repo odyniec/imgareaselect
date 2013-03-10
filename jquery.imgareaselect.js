@@ -723,7 +723,9 @@ $.imgAreaSelect = function (img, options) {
      */
     function imgMouseDown(event) {
         /* Ignore the event if animation is in progress */
-        if (event.which != 1 || $outer.is(':animated')) return false;
+        if (event.type == 'mousedown' && event.which != 1 ||
+                $outer.is(':animated'))
+            return false;
 
         adjust();
         startX = x1 = evX(event);
