@@ -32,7 +32,7 @@
 }
 
 .imgareaselect-outer {
-    background-color: #000;
+    border-color: #000;
     filter: alpha(opacity=50);
     opacity: 0.5;
 }

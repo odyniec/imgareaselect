@@ -56,7 +56,7 @@ $.imgAreaSelect = function (img, options) {
         /* Border (four divs) */
         $border = div().add(div()).add(div()).add(div()),
         /* Outer area (four divs) */
-        $outer = div().add(div()).add(div()).add(div()),
+        $outer = div(),
         /* Handles (empty by default, initialized in setOptions()) */
         $handles = $([]),
         
@@ -183,7 +183,11 @@ $.imgAreaSelect = function (img, options) {
      * @return Viewport X
      */
     function evX(event) {
-        return max(event.pageX || 0, touchCoords(event).x) - parOfs.left;
+        // TODO: Cleanup/refactor
+        var tc = touchCoords(event);
+
+        if (tc) return tc.x - parOfs.left;
+        if (event.pageX) return event.pageX - parOfs.left;
     }
 
     /**
@@ -194,7 +198,10 @@ $.imgAreaSelect = function (img, options) {
      * @return Viewport Y
      */
     function evY(event) {
-        return max(event.pageY || 0, touchCoords(event).y) - parOfs.top;
+        var tc = touchCoords(event);
+
+        if (tc) return tc.y - parOfs.top;
+        if (event.pageY) return event.pageY - parOfs.top;
     }
     
     /**
@@ -210,7 +217,7 @@ $.imgAreaSelect = function (img, options) {
         if (oev.touches && oev.touches.length)
             return { x: oev.touches[0].pageX, y: oev.touches[0].pageY };
         else
-            return { x: 0, y: 0 };
+            return false;
     }
 
     /**
@@ -347,20 +354,22 @@ $.imgAreaSelect = function (img, options) {
         $area.add($border).add($handles).css({ left: 0, top: 0 });
 
         /* Set border dimensions */
-        $border
+        $border.add($outer)
             .width(max(w - $border.outerWidth() + $border.innerWidth(), 0))
             .height(max(h - $border.outerHeight() + $border.innerHeight(), 0));
 
-        /* Arrange the outer area elements */
-        $($outer[0]).css({ left: left, top: top,
-            width: selection.x1, height: imgHeight });
-        $($outer[1]).css({ left: left + selection.x1, top: top,
-            width: w, height: selection.y1 });
-        $($outer[2]).css({ left: left + selection.x2, top: top,
-            width: imgWidth - selection.x2, height: imgHeight });
-        $($outer[3]).css({ left: left + selection.x1, top: top + selection.y2,
-            width: w, height: imgHeight - selection.y2 });
-        
+        /* Set the dimensions and border styles of the outer area */
+        $outer.css({
+            left: left,
+            top: top,
+            width: w,
+            height: h,
+            borderStyle: 'solid',
+            borderWidth: selection.y1 + 'px ' +
+                (imgWidth - selection.x2) + 'px ' + (imgHeight - selection.y2) +
+                'px ' + selection.x1 + 'px'
+        });
+
         w -= $handles.outerWidth();
         h -= $handles.outerHeight();
         
@@ -499,7 +508,7 @@ $.imgAreaSelect = function (img, options) {
     	 * mousedown/touchstart.
     	 */
     	areaMouseMove(event);
-        
+
         adjust();
 
         if (resize) {
@@ -508,7 +517,11 @@ $.imgAreaSelect = function (img, options) {
 
             x1 = viewX(selection[/w/.test(resize) ? 'x2' : 'x1']);
             y1 = viewY(selection[/n/.test(resize) ? 'y2' : 'y1']);
-            
+
+            // TODO: Added for mobile version, consider simplifying/refactoring            
+            x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
+            y2 = viewY(selection[/n/.test(resize) ? 'y1' : 'y2']);
+
             $(document).on('mousemove touchmove', selectingMouseMove)
                 .one('mouseup touchend', docMouseUp);
             $box.off('mousemove touchmove', areaMouseMove);
@@ -559,10 +572,10 @@ $.imgAreaSelect = function (img, options) {
     }
 
     /**
-     * Resize the selection area respecting the minimum/maximum dimensions and
-     * aspect ratio
+     * Check if the coordinates of the selection area are within the required
+     * limits and conform to the aspect ratio; adjust if necessary
      */
-    function doResize() {
+    function fixAreaCoords() {
         /*
          * Make sure the top left corner of the selection area stays within
          * image boundaries (it might not if the image source was dynamically
@@ -611,6 +624,14 @@ $.imgAreaSelect = function (img, options) {
         selection = { x1: selX(min(x1, x2)), x2: selX(max(x1, x2)),
             y1: selY(min(y1, y2)), y2: selY(max(y1, y2)),
             width: abs(x2 - x1), height: abs(y2 - y1) };
+    }
+
+    /**
+     * Resize the selection area respecting the minimum/maximum dimensions and
+     * aspect ratio
+     */
+    function doResize() {
+        fixAreaCoords();
 
         update();
 
@@ -625,8 +646,15 @@ $.imgAreaSelect = function (img, options) {
      * @return false
      */
     function selectingMouseMove(event) {
-        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) : viewX(selection.x2);
-        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) : viewY(selection.y2);
+        // TODO: Refactored for mobile version, might need some cleanup
+        fixAreaCoords();
+        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) || -1 : -1;
+        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) || -1 : -1;
+
+        if (x2 < 0)
+            x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
+        if (y2 < 0)
+            y2 = viewY(selection[/n/.test(resize) ? 'y1' : 'y2']);
 
         doResize();
 
@@ -948,7 +976,7 @@ $.imgAreaSelect = function (img, options) {
         /* Calculate the aspect ratio factor */
         aspectRatio = (d = (options.aspectRatio || '').split(/:/))[0] / d[1];
 
-        $img.add($outer).unbind('mousedown', imgMouseDown);
+        $img.add($outer).off('mousedown touchstart', imgMouseDown);
         
         if (options.disable || options.enable === false) {
             /* Disable the plugin */
