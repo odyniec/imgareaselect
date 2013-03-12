@@ -183,11 +183,10 @@ $.imgAreaSelect = function (img, options) {
      * @return Viewport X
      */
     function evX(event) {
-        // TODO: Cleanup/refactor
-        var tc = touchCoords(event);
+        var coords = touchCoords(event) || event, x;
 
-        if (tc) return tc.x - parOfs.left;
-        if (event.pageX) return event.pageX - parOfs.left;
+        if (x = parseInt(coords.pageX))
+            return x - parOfs.left;
     }
 
     /**
@@ -198,10 +197,10 @@ $.imgAreaSelect = function (img, options) {
      * @return Viewport Y
      */
     function evY(event) {
-        var tc = touchCoords(event);
+        var coords = touchCoords(event) || event, y;
 
-        if (tc) return tc.y - parOfs.top;
-        if (event.pageY) return event.pageY - parOfs.top;
+        if (y = parseInt(coords.pageY))
+            return y - parOfs.top;
     }
     
     /**
@@ -215,7 +214,7 @@ $.imgAreaSelect = function (img, options) {
         var oev = event.originalEvent || {};
         
         if (oev.touches && oev.touches.length)
-            return { x: oev.touches[0].pageX, y: oev.touches[0].pageY };
+            return oev.touches[0];
         else
             return false;
     }
