@@ -213,10 +213,7 @@ $.imgAreaSelect = function (img, options) {
     function touchCoords(event) {
         var oev = event.originalEvent || {};
         
-        if (oev.touches && oev.touches.length)
-            return oev.touches[0];
-        else
-            return false;
+        return oev.touches && oev.touches.length ? oev.touches[0] :false;
     }
 
     /**
