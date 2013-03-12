@@ -298,17 +298,6 @@ $.imgAreaSelect = function (img, options) {
         maxWidth = round(min(options.maxWidth / scaleX || 1<<24, imgWidth));
         maxHeight = round(min(options.maxHeight / scaleY || 1<<24, imgHeight));
         
-        /*
-         * Workaround for jQuery 1.3.2 incorrect offset calculation, originally
-         * observed in Safari 3. Firefox 2 is also affected.
-         */
-        if ($().jquery == '1.3.2' && position == 'fixed' &&
-            !docElem['getBoundingClientRect'])
-        {
-            imgOfs.top += max(document.body.scrollTop, docElem.scrollTop);
-            imgOfs.left += max(document.body.scrollLeft, docElem.scrollLeft);
-        }
-
         /* Determine parent element offset */ 
         parOfs = /absolute|relative/.test($parent.css('position')) ?
             { left: round($parent.offset().left) - $parent.scrollLeft(),
