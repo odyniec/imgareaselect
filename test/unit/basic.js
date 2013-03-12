@@ -95,26 +95,11 @@ test("Elements layout", function () {
             imgHeight = $('#test-img').height();
             imgDim = dim($('#test-img'));
 
-            /* Left */
-            deepEqual(dim($('.imgareaselect-outer').eq(0)), { x1: imgDim.x1, 
-                    y1: imgDim.y1, x2: imgDim.x1 + 10, y2: imgDim.y2 },
-                    'Check if the first outer div is positioned correctly');
+            /* Outer area */
+            deepEqual(dim($('.imgareaselect-outer')), { x1: imgDim.x1, 
+                    y1: imgDim.y1, x2: imgDim.x2, y2: imgDim.y2 },
+                    'Check if the outer area div is positioned correctly');
 
-            /* Top */
-            deepEqual(dim($('.imgareaselect-outer').eq(1)), { x1: imgDim.x1 + 10, 
-                y1: imgDim.y1, x2: imgDim.x1 + 30, y2: imgDim.y1 + 20 },
-                'Check if the second outer div is positioned correctly');
-            
-            /* Right */
-            deepEqual(dim($('.imgareaselect-outer').eq(2)), { x1: imgDim.x1 + 30, 
-                y1: imgDim.y1, x2: imgDim.x2, y2: imgDim.y2 },
-                'Check if the third outer div is positioned correctly');
-            
-            /* Bottom */
-            deepEqual(dim($('.imgareaselect-outer').eq(3)), { x1: imgDim.x1 + 10, 
-                y1: imgDim.y1 + 40, x2: imgDim.x1 + 30, y2: imgDim.y2 },
-                'Check if the fourth outer div is positioned correctly');
-            
             /* Selection area */
             deepEqual(dim($('.imgareaselect-selection')), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
@@ -136,10 +121,10 @@ test("Elements layout", function () {
             
             /* Handles */
             deepEqual(dim($('.imgareaselect-handle').eq(0)), { x1: imgDim.x1 + 10,
-                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 5, y2: imgDim.y1 + 20 + 5 },
+                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 5 + 2, y2: imgDim.y1 + 20 + 5 + 2 },
                 'Check if the top left handle div is positioned correctly');
             deepEqual(dim($('.imgareaselect-handle').eq(4)), { x1: imgDim.x1 + 10 + 6,
-                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 11, y2: imgDim.y1 + 20 + 5 },
+                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 11 + 2, y2: imgDim.y1 + 20 + 5 + 2 },
                 'Check if the top handle div is positioned correctly');
 
             /* Z-index */
@@ -168,53 +153,38 @@ test("Elements layout with a bordered image", function () {
             imgOfs = $('#test-img').offset();
             imgWidth = $('#test-img').width();
             imgHeight = $('#test-img').height();
-            imgDim = dim($('#test-img'), 10);
+            imgDim = dim($('#test-img'));
 
-            /* Left */
-            deepEqual(dim($('.imgareaselect-outer').eq(0)), { x1: imgDim.x1, 
-                    y1: imgDim.y1, x2: imgDim.x1 + 10, y2: imgDim.y2 },
-                    'Check if the first outer div is positioned correctly');
-
-            /* Top */
-            deepEqual(dim($('.imgareaselect-outer').eq(1)), { x1: imgDim.x1 + 10, 
-                y1: imgDim.y1, x2: imgDim.x1 + 30, y2: imgDim.y1 + 20 },
-                'Check if the second outer div is positioned correctly');
-            
-            /* Right */
-            deepEqual(dim($('.imgareaselect-outer').eq(2)), { x1: imgDim.x1 + 30, 
-                y1: imgDim.y1, x2: imgDim.x2, y2: imgDim.y2 },
-                'Check if the third outer div is positioned correctly');
-            
-            /* Bottom */
-            deepEqual(dim($('.imgareaselect-outer').eq(3)), { x1: imgDim.x1 + 10, 
-                y1: imgDim.y1 + 40, x2: imgDim.x1 + 30, y2: imgDim.y2 },
-                'Check if the fourth outer div is positioned correctly');
+            /* Outer area */
+            deepEqual(dim($('.imgareaselect-outer')), { x1: imgDim.x1 + 10, 
+                    y1: imgDim.y1 + 10, x2: imgDim.x2 - 10, y2: imgDim.y2 - 10 },
+                    'Check if the outer area div is positioned correctly');
             
             /* Selection area */
-            deepEqual(dim($('.imgareaselect-selection')), { x1: imgDim.x1 + 10, 
+            deepEqual(dim($('.imgareaselect-selection'), -10), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
                 'Check if the selection area div is positioned correctly');
             
             /* Selection border */
-            deepEqual(dim($('.imgareaselect-border1')), { x1: imgDim.x1 + 10, 
+            deepEqual(dim($('.imgareaselect-border1'), -10), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
                 'Check if the first area border div is positioned correctly');
-            deepEqual(dim($('.imgareaselect-border2')), { x1: imgDim.x1 + 10, 
+            deepEqual(dim($('.imgareaselect-border2'), -10), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
                 'Check if the second area border div is positioned correctly');
-            deepEqual(dim($('.imgareaselect-border3')), { x1: imgDim.x1 + 10, 
+            deepEqual(dim($('.imgareaselect-border3'), -10), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
                 'Check if the third area border div is positioned correctly');
-            deepEqual(dim($('.imgareaselect-border4')), { x1: imgDim.x1 + 10, 
+            deepEqual(dim($('.imgareaselect-border4'), -10), { x1: imgDim.x1 + 10, 
                 y1: imgDim.y1 + 20, x2: imgDim.x1 + 30, y2: imgDim.y1 + 40 },
                 'Check if the fourth area border div is positioned correctly');
             
             /* Handles */
-            deepEqual(dim($('.imgareaselect-handle').eq(0)), { x1: imgDim.x1 + 10,
-                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 5, y2: imgDim.y1 + 20 + 5 },
+            deepEqual(dim($('.imgareaselect-handle').eq(0), -10), { x1: imgDim.x1 + 10,
+                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 5 + 2, y2: imgDim.y1 + 20 + 5 + 2 },
                 'Check if the top left handle div is positioned correctly');
-            deepEqual(dim($('.imgareaselect-handle').eq(4)), { x1: imgDim.x1 + 10 + 6,
-                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 11, y2: imgDim.y1 + 20 + 5 },
+            deepEqual(dim($('.imgareaselect-handle').eq(4), -10), { x1: imgDim.x1 + 10 + 6,
+                y1: imgDim.y1 + 20, x2: imgDim.x1 + 10 + 11 + 2, y2: imgDim.y1 + 20 + 5 + 2 },
                 'Check if the top handle div is positioned correctly');
             
             /* Cleanup */

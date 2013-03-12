@@ -4,8 +4,8 @@ function dim(element, shift) {
     return {
         x1: Math.round($(element).offset().left + shift),
         y1: Math.round($(element).offset().top + shift),
-        x2: Math.round($(element).offset().left + $(element).width() + shift),
-        y2: Math.round($(element).offset().top + $(element).height() + shift)
+        x2: Math.round($(element).offset().left + $(element).outerWidth() + shift),
+        y2: Math.round($(element).offset().top + $(element).outerHeight() + shift)
     };
 }
 
