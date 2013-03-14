@@ -204,16 +204,17 @@ $.imgAreaSelect = function (img, options) {
     }
     
     /**
-     * Get X and Y coordinates of a touch event
+     * Get the first touch object in an event
      *
      * @param event
      *            The event object
-     * @return Coordinates object
+     * @return The first touch object found in the event object, or false if
+     *         none are found
      */
     function touchCoords(event) {
         var oev = event.originalEvent || {};
         
-        return oev.touches && oev.touches.length ? oev.touches[0] :false;
+        return oev.touches && oev.touches.length ? oev.touches[0] : false;
     }
 
     /**
