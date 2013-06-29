@@ -86,6 +86,12 @@ $.imgAreaSelect = function (img, options) {
         
         /* X/Y coordinates of the starting point for move/resize operations */ 
         startX, startY,
+
+        /*
+         * Distance between the mouse cursor (or touch point) and selection area
+         * edges (when resizing)
+         */
+        edgeX, edgeY,
         
         /* Horizontal and vertical scaling factors */
         scaleX, scaleY,
@@ -508,6 +514,9 @@ $.imgAreaSelect = function (img, options) {
             x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
             y2 = viewY(selection[/n/.test(resize) ? 'y1' : 'y2']);
 
+            edgeX = x2 - evX(event);
+            edgeY = y2 - evY(event);
+
             $(document).on('mousemove touchmove', selectingMouseMove)
                 .one('mouseup touchend', docMouseUp);
             $box.off('mousemove touchmove', areaMouseMove);
@@ -634,8 +643,8 @@ $.imgAreaSelect = function (img, options) {
     function selectingMouseMove(event) {
         // TODO: Refactored for mobile version, might need some cleanup
         fixAreaCoords();
-        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) || -1 : -1;
-        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) || -1 : -1;
+        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) + edgeX || -1 : -1;
+        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) + edgeY || -1 : -1;
 
         if (x2 < 0)
             x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
@@ -744,6 +753,7 @@ $.imgAreaSelect = function (img, options) {
         adjust();
         startX = x1 = evX(event);
         startY = y1 = evY(event);
+        edgeX = edgeY = 0;
 
         /* Selection will start when the mouse is moved */
         $(document).on({ 'mousemove touchmove': startSelection,
