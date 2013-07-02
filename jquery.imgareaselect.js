@@ -95,25 +95,25 @@ $.imgAreaSelect = function (img, options) {
         
         /* Horizontal and vertical scaling factors */
         scaleX, scaleY,
-        
+
         /* Current resize mode ("nw", "se", etc.) */
         resize,
-        
+
         /* Selection area constraints */
         minWidth, minHeight, maxWidth, maxHeight,
-        
+
         /* Aspect ratio to maintain (floating point number) */
         aspectRatio,
-        
+
         /* Are the plugin elements currently displayed? */
         shown,
-        
+
         /* Current selection (relative to parent element) */
         x1, y1, x2, y2,
-        
+
         /* Current selection (relative to scaled image) */
         selection = { x1: 0, y1: 0, x2: 0, y2: 0, width: 0, height: 0 },
-        
+
         /* Document element */
         docElem = document.documentElement,
 
@@ -303,12 +303,16 @@ $.imgAreaSelect = function (img, options) {
         maxHeight = round(min(options.maxHeight / scaleY || 1<<24, imgHeight));
         
         /* Determine parent element offset */ 
-        parOfs = /absolute|relative/.test($parent.css('position')) ?
-            { left: round($parent.offset().left) - $parent.scrollLeft(),
-                top: round($parent.offset().top) - $parent.scrollTop() } :
-            position == 'fixed' ?
-                { left: $(document).scrollLeft(), top: $(document).scrollTop() } :
-                { left: 0, top: 0 };
+        parOfs = position == 'fixed' ?
+            /* Plugin elements position set to fixed */
+            { left: $(document).scrollLeft(), top: $(document).scrollTop() } :
+            /* Check parent element position */
+            /static|^$/.test($parent.css('position')) ?
+                /* Static */
+                { left: 0, top: 0 } :
+                /* Absolute or relative */
+                { left: round($parent.offset().left) - $parent.scrollLeft(),
+                    top: round($parent.offset().top) - $parent.scrollTop() };
 
         left = viewX(0);
         top = viewY(0);
@@ -1081,13 +1085,16 @@ $.imgAreaSelect = function (img, options) {
     while ($p.length) {
         zIndex = max(zIndex,
             !isNaN($p.css('z-index')) ? $p.css('z-index') : zIndex);
-        /* Also check if any of the ancestor elements has fixed position */ 
-        if ($p.css('position') == 'fixed')
+        /*
+         * If the parent element is not set explicitly, check if any of the
+         * ancestor elements has fixed position
+         */ 
+        if (!options.parent && $p.css('position') == 'fixed')
             position = 'fixed';
 
         $p = $p.parent(':not(body)');
     }
-    
+
     /*
      * If z-index is given as an option, it overrides the one found by the
      * above loop
