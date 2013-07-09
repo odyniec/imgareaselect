@@ -793,8 +793,6 @@ $.imgAreaSelect = function (img, options) {
             onSelectEnd: function () {}
         }, options));
 
-        $box.add($outer).css({ visibility: '' });
-        
         if (options.show) {
             shown = true;
             adjust();
@@ -1106,15 +1104,8 @@ $.imgAreaSelect = function (img, options) {
      */
     $.imgAreaSelect.keyPress = msie || safari ? 'keydown' : 'keypress';
 
-    /*
-     * We initially set visibility to "hidden" as a workaround for a weird
-     * behaviour observed in Google Chrome 1.0.154.53 (on Windows XP). Normally
-     * we would just set display to "none", but, for some reason, if we do so
-     * then Chrome refuses to later display the element with .show() or
-     * .fadeIn().
-     */
-    $box.add($outer).css({ visibility: 'hidden', position: position,
-        overflow: 'hidden', zIndex: zIndex || '0' });
+    $box.add($outer).hide().css({ position: position, overflow: 'hidden',
+        zIndex: zIndex || '0' });
     $box.css({ zIndex: zIndex + 2 || 2 });
     $area.add($border).css({ position: 'absolute', fontSize: 0 });
     
