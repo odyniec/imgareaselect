@@ -1101,9 +1101,6 @@ $.imgAreaSelect = function (img, options) {
      */
     zIndex = options.zIndex || zIndex;
 
-    if (msie)
-        $img.attr('unselectable', 'on');
-
     /*
      * In MSIE and WebKit, we need to use the keydown event instead of keypress
      */
