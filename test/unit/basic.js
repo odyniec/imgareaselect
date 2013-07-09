@@ -87,7 +87,7 @@ test("Elements layout", function () {
 
     stop();
     
-    $('#test-img').imgAreaSelect({ x1: 10, y1: 20, x2: 30, y2: 40,
+    $('#test-img').imgAreaSelect({ x1: 10, y1: 20, x2: 29, y2: 39,
         handles: true,
         onInit: function (img, selection) {
             imgOfs = $('#test-img').offset();
@@ -147,7 +147,7 @@ test("Elements layout with a bordered image", function () {
     
     stop();
     
-    $('#test-img').imgAreaSelect({ x1: 10, y1: 20, x2: 30, y2: 40,
+    $('#test-img').imgAreaSelect({ x1: 10, y1: 20, x2: 29, y2: 39,
         handles: true,
         onInit: function (img, selection) {
             imgOfs = $('#test-img').offset();
@@ -259,7 +259,7 @@ test("Positioning", function () {
     stop();
 
     $('#test-img-static').imgAreaSelect({
-        x1: 10, y1: 20, x2: 30, y2: 40,
+        x1: 10, y1: 20, x2: 29, y2: 39,
         show: true,
         classPrefix: 'ias',
         onInit: function (img, selection) {
@@ -282,7 +282,7 @@ test("Positioning", function () {
             parent: '#test-div-static',
             show: true,
             classPrefix: 'ias',
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             onInit: function (img, selection) {
                 var imgOfs = $('#test-img-static-parent').offset();
                 var selOfs = $('.ias-selection').offset();
@@ -303,7 +303,7 @@ test("Positioning", function () {
 
     var testImgRelative = function () {
         $('#test-img-relative').imgAreaSelect({
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             show: true,
             classPrefix: 'ias',
             onInit: function (img, selection) {
@@ -327,7 +327,7 @@ test("Positioning", function () {
             parent: '#test-div-relative',
             show: true,
             classPrefix: 'ias',
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             onInit: function (img, selection) {
                 var imgOfs = $('#test-img-relative-parent').offset();
                 var selOfs = $('.ias-selection').offset();
@@ -348,7 +348,7 @@ test("Positioning", function () {
         
     var testImgAbsolute = function () {
         $('#test-img-absolute').imgAreaSelect({
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             show: true,
             classPrefix: 'ias',
             onInit: function (img, selection) {
@@ -373,7 +373,7 @@ test("Positioning", function () {
             parent: '#test-div-absolute',
             show: true,
             classPrefix: 'ias',
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             onInit: function (img, selection) {
                 var imgOfs = $('#test-img-absolute-parent').offset();
                 var selOfs = $('.ias-selection').offset();
@@ -397,7 +397,7 @@ test("Positioning", function () {
 
     var testImgFixed = function () {
         $('#test-img-fixed').imgAreaSelect({
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             show: true,
             classPrefix: 'ias',
             onInit: function (img, selection) {
@@ -425,7 +425,7 @@ test("Positioning", function () {
             parent: '#test-div-fixed',
             show: true,
             classPrefix: 'ias',
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             onInit: function (img, selection) {
                 $(window).scrollLeft($(window).scrollLeft() + 100);
                 $(window).scrollTop($(window).scrollTop() + 100);
@@ -455,7 +455,7 @@ test("Positioning", function () {
             parent: '#test-div-scrolled',
             show: true,
             classPrefix: 'ias',
-            x1: 10, y1: 20, x2: 30, y2: 40,
+            x1: 10, y1: 20, x2: 29, y2: 39,
             onInit: function (img, selection) {
                 $('#test-div-scrolled').scrollTop($('#test-div-scrolled').scrollTop() + 20);
                 
@@ -521,7 +521,7 @@ test("Plugin removal", function () {
     stop();
         
     $('#test-img').imgAreaSelect({
-        x1: 10, y1: 20, x2: 30, y2: 40,
+        x1: 10, y1: 20, x2: 29, y2: 39,
         onInit: function (img, selection) {
             ok($('#test-img').imgAreaSelect({ instance: true }) instanceof
                     jQuery.imgAreaSelect, 'Check if "instance: true" returns an instance of ' +

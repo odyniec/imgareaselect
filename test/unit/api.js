@@ -11,11 +11,11 @@ test("setSelection()/getSelection()", function () {
     var ias = $('#test-img').imgAreaSelect({
         show: true,
         onInit: function (img, selection) {
-            ias.setSelection(10, 20, 30, 40);
+            ias.setSelection(10, 20, 29, 39);
             ias.update();
             var selection = ias.getSelection();
 
-            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
+            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 29, y2: 39,
                 width: 20, height: 20 },
                 'Check if the returned selection is correct');
 
@@ -48,11 +48,11 @@ test("setSelection()/getSelection() with scaling", function () {
         imageWidth: 320,
         imageHeight: 200,
         onInit: function (img, selection) {
-            ias.setSelection(10, 20, 30, 40);
+            ias.setSelection(10, 20, 29, 39);
             ias.update();
             var selection = ias.getSelection();
             
-            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 30, y2: 40,
+            deepEqual(ias.getSelection(), { x1: 10, y1: 20, x2: 29, y2: 39,
                 width: 20, height: 20 },
                 'Check if the returned selection is correct');
 
@@ -88,7 +88,7 @@ test("cancelSelection", function () {
     
     var ias = $('#test-img').imgAreaSelect({
         show: true,
-        x1: 20, y1: 20, x2: 50, y2: 50,
+        x1: 20, y1: 20, x2: 49, y2: 49,
         onSelectEnd: selectEnd,
         onInit: function (img, selection) {
             ias.cancelSelection();

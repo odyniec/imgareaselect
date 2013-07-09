@@ -55,7 +55,7 @@ $.imgAreaSelect = function (img, options) {
         $area = div(),
         /* Border (four divs) */
         $border = div().add(div()).add(div()).add(div()),
-        /* Outer area (four divs) */
+        /* Outer area */
         $outer = div(),
         /* Handles (empty by default, initialized in setOptions()) */
         $handles = $([]),
@@ -236,8 +236,8 @@ $.imgAreaSelect = function (img, options) {
         
         return { x1: round(selection.x1 * sx),
             y1: round(selection.y1 * sy),
-            x2: round(selection.x2 * sx),
-            y2: round(selection.y2 * sy),
+            x2: round(selection.x2 * sx) - 1,
+            y2: round(selection.y2 * sy) - 1,
             width: round(selection.x2 * sx) - round(selection.x1 * sx),
             height: round(selection.y2 * sy) - round(selection.y1 * sy) };
     }
@@ -263,8 +263,8 @@ $.imgAreaSelect = function (img, options) {
         selection = {
             x1: round(x1 / sx || 0),
             y1: round(y1 / sy || 0),
-            x2: round(x2 / sx || 0),
-            y2: round(y2 / sy || 0)
+            x2: round(++x2 / sx || 0),
+            y2: round(++y2 / sy || 0)
         };
         
         selection.width = selection.x2 - selection.x1;

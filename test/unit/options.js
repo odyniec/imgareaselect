@@ -10,7 +10,7 @@ test("classPrefix", function () {
     
     $('#test-img').imgAreaSelect({
         classPrefix: 'test',
-        x1: 50, y1: 50, x2: 150, y2: 150,
+        x1: 50, y1: 50, x2: 149, y2: 149,
         onInit: function (img, selection) {
             ok($('.test-selection').length == 1,
                     'Check if there is one element with the class ' + 
@@ -38,7 +38,7 @@ test("handles", function () {
     stop();
     
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150,
+        x1: 50, y1: 50, x2: 149, y2: 149,
         handles: true,
         onInit: function (img, selection) {
             ok($('.imgareaselect-handle:visible').length == 8,
@@ -302,7 +302,7 @@ test("movable", function () {
     };
     
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150,
+        x1: 50, y1: 50, x2: 149, y2: 149,
         show: true,
         onInit: function (img, selection) {
             tryMove();
@@ -310,7 +310,7 @@ test("movable", function () {
             var newSelection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            deepEqual(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
+            deepEqual(newSelection, { x1: 25, y1: 25, x2: 124, y2: 124,
                 width: 100, height: 100 },
                 'Check if the returned selection is correct after move');
 
@@ -321,7 +321,7 @@ test("movable", function () {
     var checkNotMovable = function () {
         $('#test-img').imgAreaSelect({ remove: true });
         $('#test-img').imgAreaSelect({
-            x1: 50, y1: 50, x2: 150, y2: 150,
+            x1: 50, y1: 50, x2: 149, y2: 149,
             movable: false,
             onInit: function (img, selection) {
                 tryMove();
@@ -329,7 +329,7 @@ test("movable", function () {
                 var newSelection = $(img).imgAreaSelect({ instance: true })
                     .getSelection();
                 
-                deepEqual(newSelection, { x1: 50, y1: 50, x2: 150, y2: 150,
+                deepEqual(newSelection, { x1: 50, y1: 50, x2: 149, y2: 149,
                     width: 100, height: 100 },
                     'Check if the returned selection is correct when ' +
                     'movable is set to false');
@@ -353,7 +353,7 @@ test("parent", function () {
     
     $('#test-img').imgAreaSelect({
         parent: '#test-div',
-        x1: 10, y1: 10, x2: 20, y2: 20,
+        x1: 10, y1: 10, x2: 19, y2: 19,
         onInit: function (img, selection) {
             equal($('.imgareaselect-selection').parent().parent().attr('id'),
                 'test-div', 'Check if the parent element is set correctly');
@@ -374,7 +374,7 @@ test("persistent", function () {
     stop();
 
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150, persistent: true,
+        x1: 50, y1: 50, x2: 149, y2: 149, persistent: true,
         onInit: function (img, selection) {
             var eventDown = jQuery.Event('mousedown'),
                 eventUp = jQuery.Event('mouseup');
@@ -436,7 +436,7 @@ test("resizable", function () {
     };
     
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150,
+        x1: 50, y1: 50, x2: 149, y2: 149,
         show: true,
         onInit: function (img, selection) {
             tryResize();
@@ -444,7 +444,7 @@ test("resizable", function () {
             var newSelection = $(img).imgAreaSelect({ instance: true })
                 .getSelection();
             
-            deepEqual(newSelection, { x1: 25, y1: 25, x2: 150, y2: 150,
+            deepEqual(newSelection, { x1: 25, y1: 25, x2: 149, y2: 149,
                 width: 125, height: 125 },
                 'Check if the returned selection is correct after resize');
 
@@ -455,7 +455,7 @@ test("resizable", function () {
     var checkNotResizable = function () {
         $('#test-img').imgAreaSelect({ remove: true });
         $('#test-img').imgAreaSelect({
-            x1: 50, y1: 50, x2: 150, y2: 150,
+            x1: 50, y1: 50, x2: 149, y2: 149,
             resizable: false,
             onInit: function (img, selection) {
                 tryResize();
@@ -463,7 +463,7 @@ test("resizable", function () {
                 var newSelection = $(img).imgAreaSelect({ instance: true })
                     .getSelection();
                 
-                deepEqual(newSelection, { x1: 25, y1: 25, x2: 125, y2: 125,
+                deepEqual(newSelection, { x1: 25, y1: 25, x2: 124, y2: 124,
                     width: 100, height: 100 },
                     'Check if the returned selection is correct when ' +
                     'resizable is set to false');
@@ -485,7 +485,7 @@ test("resizeMargin", function () {
     stop();
 
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150,
+        x1: 50, y1: 50, x2: 149, y2: 149,
         onInit: function (img, selection) {
             var eventMove = jQuery.Event('mousemove'),
                 x = $('.imgareaselect-selection').offset().left,
@@ -523,12 +523,12 @@ test("x1, y1, ...", function () {
     stop();
 
     $('#test-img').imgAreaSelect({
-        x1: 50, y1: 50, x2: 150, y2: 150, persistent: true,
+        x1: 50, y1: 50, x2: 149, y2: 149, persistent: true,
         onInit: function (img, selection) {
             ok($('.imgareaselect-selection').is(':visible'),
                 'Check if the selection area is visible upon initialization');
             
-            deepEqual({ x1: 50, y1: 50, x2: 150, y2: 150,
+            deepEqual({ x1: 50, y1: 50, x2: 149, y2: 149,
                 width: 100, height: 100 }, selection,
                 'Check if the returned selection object is correct');
 
