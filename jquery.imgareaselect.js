@@ -647,7 +647,6 @@ $.imgAreaSelect = function (img, options) {
      * @return false
      */
     function selectingMouseMove(event) {
-        // TODO: Refactored for mobile version, might need some cleanup
         fixAreaCoords();
         x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) + edgeX || -1 : -1;
         y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) + edgeY || -1 : -1;
