@@ -511,12 +511,14 @@ $.imgAreaSelect = function (img, options) {
             /* Resize mode is in effect */
             $('body').css('cursor', resize + '-resize');
 
-            x1 = viewX(selection[/w/.test(resize) ? 'x2' : 'x1']);
-            y1 = viewY(selection[/n/.test(resize) ? 'y2' : 'y1']);
-
-            // TODO: Added for mobile version, consider simplifying/refactoring            
-            x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
-            y2 = viewY(selection[/n/.test(resize) ? 'y1' : 'y2']);
+            /*
+             * Set (x1, y1) to the fixed corner of the selection area, and (x2,
+             * y2) to the corner that's being moved.
+             */
+            x1 = viewX(selection['x' + (1 + /w/.test(resize))]);
+            y1 = viewY(selection['y' + (1 + /n/.test(resize))]);
+            x2 = viewX(selection['x' + (1 + !/w/.test(resize))]);
+            y2 = viewY(selection['y' + (1 + !/n/.test(resize))]);
 
             edgeX = x2 - evX(event);
             edgeY = y2 - evY(event);
