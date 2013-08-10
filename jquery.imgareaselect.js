@@ -114,12 +114,12 @@ $.imgAreaSelect = function (img, options) {
         /* Current selection (relative to scaled image) */
         selection = { x1: 0, y1: 0, x2: 0, y2: 0, width: 0, height: 0 },
 
-        /* Document element */
-        docElem = document.documentElement,
-
         /* User agent */
         ua = navigator.userAgent,
         
+        /* Is the user performing a touch action? */
+        touch,
+
         /* Various helper variables used throughout the code */ 
         $p, d, i, o, w, h, adjusted;
 
@@ -322,7 +322,7 @@ $.imgAreaSelect = function (img, options) {
          * necessary
          */
         if (selection.x2 > imgWidth || selection.y2 > imgHeight)
-            doResize();
+            fixAreaCoords();
     }
 
     /**
@@ -424,25 +424,31 @@ $.imgAreaSelect = function (img, options) {
      *            Callback function to be called when fadeOut() completes
      */
     function hide($elem, fn) {
-        options.fadeSpeed ? $elem.fadeOut(options.fadeSpeed, fn) : $elem.hide(); 
+        options.fadeDuration ? $elem.fadeOut(options.fadeDuration, fn) : $elem.hide();
     }
 
     /**
-     * Selection area mousemove event handler
-     * 
+     * Check if a touch event is expected and if the passed event object really
+     * is a touch event
+     *
+     * @param event
+     *            The event object
+     * @return True if the event handler should be interrupted
+     */
+    function breakWhenNoTouch(event) {
+        return touch && !/^touch/.test(event.type);
+    }
+
+    /**
+     * Check event coordinates to determine if the selection area should be
+     * resized or moved
+     *
      * @param event
      *            The event object
      */
-    function areaMouseMove(event) {
+    function checkResize(event) {
         var x = selX(evX(event)) - selection.x1,
             y = selY(evY(event)) - selection.y1;
-        
-        if (!adjusted) {
-            adjust();
-            adjusted = true;
-
-            $box.one('mouseout', function () { adjusted = false; });
-        }
 
         /* Clear the resize mode */
         resize = '';
@@ -467,12 +473,36 @@ $.imgAreaSelect = function (img, options) {
     }
 
     /**
+     * Selection area mousemove event handler
+     * 
+     * @param event
+     *            The event object
+     */
+    function areaMouseMove(event) {
+        if (breakWhenNoTouch(event))
+            return;
+
+        if (!adjusted) {
+            adjust();
+            adjusted = true;
+
+            $box.one('mouseout', function () { adjusted = false; });
+        }
+
+        checkResize(event);
+
+        return false;
+    }
+
+    /**
      * Document mouseup event handler
      * 
      * @param event
      *            The event object
      */
     function docMouseUp(event) {
+        /* Reset touch action flag */
+        touch = false;
         /* Set back the default cursor */
         $('body').css('cursor', '');
         /*
@@ -485,7 +515,13 @@ $.imgAreaSelect = function (img, options) {
         $(document).off('mousemove touchmove', selectingMouseMove);
         $box.on('mousemove touchmove', areaMouseMove);
         
-        options.onSelectEnd(img, getSelection());
+        /*
+         * If docMouseUp() is called by areaMouseDown() to work around the issue
+         * with Android Chrome, there is no event object, and we don't want to
+         * run the onSelectEnd callback function.
+         */
+        if (event)
+            options.onSelectEnd(img, getSelection());
     }
 
     /**
@@ -497,19 +533,33 @@ $.imgAreaSelect = function (img, options) {
      */
     function areaMouseDown(event) {
         if (event.type == 'mousedown' && event.which != 1) return false;
+        
+        if (event.type == 'touchstart') {
+            /*
+             * Android Chrome often does not produce a touchend event
+             * (https://code.google.com/p/chromium/issues/detail?id=152913), so
+             * if it appears that the touch flag is still set, we call the
+             * mouseup/touchend event handler to clean up after the previous
+             * touch action.
+             */
+            if (touch)
+                docMouseUp();
 
-    	/*
-    	 * With mobile browsers, there is no "moving the pointer over" action,
-    	 * so we need to simulate one mousemove event happening prior to
-    	 * mousedown/touchstart.
-    	 */
-    	areaMouseMove(event);
+            /* This is a start of a touch action */
+            touch = true;
 
-        adjust();
+            /* 
+             * Normally, checkResize() is called by the mousemove event handler
+             * triggered just before mousedown, but with a touch action there
+             * is no mousemove, so we need to call it explicitly.
+             */
+            checkResize(event);
+        }
+        else
+            adjust();
 
         if (resize) {
             /* Resize mode is in effect */
-            $('body').css('cursor', resize + '-resize');
 
             /*
              * Set (x1, y1) to the fixed corner of the selection area, and (x2,
@@ -535,6 +585,7 @@ $.imgAreaSelect = function (img, options) {
 
             $(document).on('mousemove touchmove', movingMouseMove)
                 .one('mouseup touchend', function () {
+                    touch = false;
                     options.onSelectEnd(img, getSelection());
 
                     $(document).off('mousemove touchmove', movingMouseMove);
@@ -647,14 +698,13 @@ $.imgAreaSelect = function (img, options) {
      * @return false
      */
     function selectingMouseMove(event) {
+        if (breakWhenNoTouch(event))
+            return;
+        
         fixAreaCoords();
-        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) + edgeX || -1 : -1;
-        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) + edgeY || -1 : -1;
 
-        if (x2 < 0)
-            x2 = viewX(selection[/w/.test(resize) ? 'x1' : 'x2']);
-        if (y2 < 0)
-            y2 = viewY(selection[/n/.test(resize) ? 'y1' : 'y2']);
+        x2 = /w|e|^$/.test(resize) || aspectRatio ? evX(event) + edgeX : viewX(selection.x2);
+        y2 = /n|s|^$/.test(resize) || aspectRatio ? evY(event) + edgeY : viewY(selection.y2);
 
         doResize();
 
@@ -689,6 +739,9 @@ $.imgAreaSelect = function (img, options) {
      * @return false
      */
     function movingMouseMove(event) {
+        if (breakWhenNoTouch(event))
+            return;
+
         x1 = max(left, min(startX + evX(event), left + imgWidth - selection.width));
         y1 = max(top, min(startY + evY(event), top + imgHeight - selection.height));
 
@@ -713,7 +766,7 @@ $.imgAreaSelect = function (img, options) {
 
         if (!$outer.is(':visible'))
             /* Show the plugin elements */
-            $box.add($outer).hide().fadeIn(options.fadeSpeed||0);
+            $box.add($outer).hide().fadeIn(options.fadeDuration||0)
 
         shown = true;
 
@@ -754,6 +807,9 @@ $.imgAreaSelect = function (img, options) {
         if (event.type == 'mousedown' && event.which != 1 ||
                 $outer.is(':animated'))
             return false;
+
+        /* If it's a touch action, set the touch flag */
+        touch = event.type == 'touchstart';
 
         adjust();
         startX = x1 = evX(event);
@@ -798,7 +854,7 @@ $.imgAreaSelect = function (img, options) {
             shown = true;
             adjust();
             update();
-            $box.add($outer).hide().fadeIn(options.fadeSpeed||0);
+            $box.add($outer).hide().fadeIn(options.fadeDuration||0)
         }
 
         /*
@@ -968,7 +1024,7 @@ $.imgAreaSelect = function (img, options) {
             hide($box.add($outer));
         else if (newOptions.show && imgLoaded) {
             shown = true;
-            $box.add($outer).fadeIn(options.fadeSpeed||0);
+            $box.add($outer).fadeIn(options.fadeDuration||0)
             doUpdate();
         }
 
