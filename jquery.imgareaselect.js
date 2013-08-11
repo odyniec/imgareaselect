@@ -1,6 +1,6 @@
 /*
  * imgAreaSelect jQuery plugin
- * version 1.0
+ * version 1.0.0-rc.1
  *
  * Copyright (c) 2008-2013 Michal Wojciechowski (odyniec.net)
  *
