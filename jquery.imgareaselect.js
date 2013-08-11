@@ -490,8 +490,6 @@ $.imgAreaSelect = function (img, options) {
         }
 
         checkResize(event);
-
-        return false;
     }
 
     /**
